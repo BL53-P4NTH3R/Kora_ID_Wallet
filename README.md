@@ -113,8 +113,12 @@ sequenceDiagram
 
 ### 1. Per-Attribute Salting & Disclosures
 Every individual attribute $i$ is salted with 16 bytes of cryptographically secure randomness ($s_i$):
-$$\text{disclosure}_i = \text{base64url}(\text{JSON}([s_i, \text{claim\_name}_i, \text{claim\_value}_i]))$$
-$$\text{digest}_i = \text{base64url}(\text{SHA-256}(\text{disclosure}_i))$$
+$$
+disclosure_i = base64url(JSON([s_i, claim_name_i, claim_value_i]))
+$$
+$$
+digest_i = base64url(SHA-256(disclosure_i))
+$$
 
 The issuer JWT payload contains only the `_sd` array of digests:
 ```json
@@ -136,7 +140,9 @@ The issuer JWT payload contains only the `_sd` array of digests:
 
 ### 2. Holder Key Binding (RFC 7800 & KB-JWT)
 To prove the presenter holds the private key corresponding to the public key in `cnf.jwk`, the wallet signs a **Key Binding JWT (KB-JWT)**:
-$$\text{sd\_hash} = \text{base64url}(\text{SHA-256}(\text{issuer\_jwt} + \text{"~"} + D_1 + \text{"~"} \dots + D_m + \text{"~"}))$$
+$$
+sd_hash = base64url(SHA-256(issuer_jwt + "~" + D_1 + "~" + ... + D_m + "~"))
+$$
 ```json
 {
   "alg": "ES256",
@@ -158,7 +164,9 @@ Field verifiers enforce two defenses against stolen presentations:
 
 ### 4. Zero-PII Salted Audit Log (NDPA 2023 Compliant)
 Instead of recording citizen details, verifier terminals generate a salted cryptographic transaction proof:
-$$\text{audit\_proof} = \text{SHA-256}(\text{verifier\_id} + \text{salt} + \text{credential\_id})$$
+$$
+audit_proof = SHA-256(verifier_id + salt + credential_id)
+$$
 * **Stored in Audit Log**: `timestamp`, `verifierId`, `checkType`, `status`, `audit_proof`.
 * **Zero PII**: Citizen NIN, birth date, name, and address are **never written to disk or logs**.
 
@@ -240,7 +248,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 ### Step 5: Test Replay Attack Rejection
 1. Paste the exact same presentation token into the Verifier a second time.
 2. The Verifier immediately rejects it with:
-   $$\text{Security Verification Failed: Replay attack detected: Nonce has already been used.}$$
+  `Security Verification Failed: Replay attack detected: Nonce has already been used.`
 
 ### Step 6: Inspect the Privacy-Preserving Audit Log
 1. In the Verifier terminal, click the **Audit Log** tab.
