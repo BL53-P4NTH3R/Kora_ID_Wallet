@@ -9,7 +9,14 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@sd-jwt/core": "^0.21.0",
+    "clsx": "^2.1.1",
+    "html5-qrcode": "^2.3.8",
+    "idb-keyval": "^6.3.0",
+    "jose": "^6.2.12",
+    "lucide-react": "^1.47.0",
     "next": "16.3.5",
+    "qrcode.react": "^4.2.0",
     "react": "19.2.8",
     "react-dom": "19.2.8"
   },
